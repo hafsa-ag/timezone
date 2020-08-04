@@ -1,7 +1,7 @@
 """Main flask app for parsing restitutions xls"""
 
 from flask import Flask, jsonify, request
-frm flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 from modules.scrapingCacaoData import scrapCacaoToJson
 import sys
 import logging
