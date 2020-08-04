@@ -1,4 +1,3 @@
 Flask
-Pandas
-xlrd
-uwsgi
+beautifulsoup4
+uwsgi 
