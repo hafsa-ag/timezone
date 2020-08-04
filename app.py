@@ -13,11 +13,11 @@ app.logger.setLevel(logging.ERROR)
 
 @app.route('/')
 def hello_world():
-    return "Hello!"
+    return "GET CACAO !"
 
 
 @app.route('/json', methods=["GET"])
-def postXLS():
+def getCacao():
     """
     Post method takes xls from request
     returns json of data with quantiles and risk calculated
