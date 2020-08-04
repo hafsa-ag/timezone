@@ -26,7 +26,7 @@ def random_headers():
 
 def scrapCacaoToJson() :
 
-    
+
 #getting page data
     page = requests.get(link_of_page,headers=random_headers())
     soup = bs(page.content,'html.parser',from_encoding="iso-8859-1")
@@ -41,9 +41,6 @@ def scrapCacaoToJson() :
     data_cacao['current']['indicative_value'] = soup.find('span',{"class":"c-faceplate__indicative-value"}).text.strip()
     data_cacao['current']['variation'] = soup.find('span',{"c-instrument c-instrument--variation"}).text.strip()
 
-
-"""prepare to fill the historic_5days with the data in the table containing 5 consecutive days     
-   of the value (Der.),the variation percent (Var.), the indicative value (Ouv.)"""
     table_5days = soup.find('table', class_='c-table c-table--generic')
     headers = table_5days.find_all('th')
     body = table_5days.find_all('td')
@@ -58,3 +55,7 @@ def scrapCacaoToJson() :
 
 #return the json of the dict
     return json.dumps(data_cacao)
+
+
+# prepare to fill the historic_5days with the data in the table containing 5 consecutive days     
+# of the value (Der.),the variation percent (Var.), the indicative value (Ouv.)
