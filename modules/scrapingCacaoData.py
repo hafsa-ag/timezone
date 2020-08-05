@@ -51,11 +51,14 @@ def scrapCacaoToJson() :
     
     for i in range(0,len(body),len(headers)):
         opt = ''.join(e for e in body[i].text if e.isalnum())
-        data_cacao[opt] = {}
+        data_cacao[opt] = []
         for j in range(1,len(headers)):
+            min_dict = {}
             date = headers[j].get_text().strip()
             data = body[i+j].get_text().strip()
-            data_cacao[opt][date] = data
+            min_dict['date'] = date
+            min_dict['value'] = data
+            data_cacao[opt].append(min_dict)
 
 #return the json of the dict
     return data_cacao
