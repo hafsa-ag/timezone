@@ -33,7 +33,7 @@ def scrapCacaoToJson() :
 
 
 #prepare the dict, where current is the data of today and historic_5days is for the previous 5 days
-    data_cacao = {'current':{},'historic_5days':{}}
+    data_cacao = {'current':{}}
 
 
 #current contains the last value, the incative value and the variation percent
@@ -47,16 +47,17 @@ def scrapCacaoToJson() :
     table_5days = soup.find('table', class_='c-table c-table--generic')
     headers = table_5days.find_all('th')
     body = table_5days.find_all('td')
-
+    
+    
     for i in range(0,len(body),len(headers)):
         opt = ''.join(e for e in body[i].text if e.isalnum())
-        data_cacao['historic_5days'][opt] = {}
+        data_cacao[opt] = {}
         for j in range(1,len(headers)):
             date = headers[j].get_text().strip()
             data = body[i+j].get_text().strip()
-            data_cacao['historic_5days'][opt][date] = data
+            data_cacao[opt][date] = data
 
 #return the json of the dict
-    return json.dumps(data_cacao)
+    return data_cacao
 
 
