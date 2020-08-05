@@ -48,7 +48,7 @@ def scrapCacaoToJson() :
     headers = table_5days.find_all('th')
     body = table_5days.find_all('td')
 
-    for i in range(0,len(body),6):
+    for i in range(0,len(body),len(headers)):
         opt = ''.join(e for e in body[i].text if e.isalnum())
         data_cacao['historic_5days'][opt] = {}
         for j in range(1,len(headers)):
