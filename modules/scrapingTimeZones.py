@@ -34,53 +34,38 @@ def scrapTimeZone() :
     table_all = soup.find('table', class_='dataTab1 genericBlock')
     trs = table_all.find_all('tr')
 
-    countries = []
+    countries = {}
+    countries['countries'] = []
     tmp_ctr = ""
     tmp_state = ""
-
     for t in range(len(trs)):
-
         tds = trs[t].find_all('td')
         ctry =  tds[0].find('a',class_='country_link')
         state =  tds[0].find('a',class_='state_link')
-
         if ctry :
             tmp_ctr =  ctry.text
             tmp_state = ""
             country={}
             country['country'] = tmp_ctr
             country['components'] = []
-            countries.append(country)
-
+            countries['countries'].append(country)
         elif state : 
             tmp_state = state.text
-            print(countries)
-            tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+            tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries['countries']))[0]
             tmp['components'].append({'state':tmp_state,'components':[]})
-
         else :
-
             if tds[0].text=='-':
                 tmp_state = ""
-
             else :
-
                 for a in tds[0].find_all('a'):
                     city = {}
                     city['city'] =  a.text
                     city['time'] = tds[1].find('span',class_='time_format_24').text
-
                     if tmp_state == "":
-                        tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+                        tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries['countries']))[0]
                         tmp['components'].append(city)
-
                     else :
-                        tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+                        tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries['countries']))[0]
                         tmp = list(filter(lambda state: state['state']==tmp_state,tmp['components']))[0]
                         tmp['components'].append(city)
-
-
-    #return the json of the dict
-    return {"countries":countries}
-
-
+    return countries
