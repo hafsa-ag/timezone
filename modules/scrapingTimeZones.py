@@ -43,7 +43,7 @@ def scrapTimeZone() :
         if ctry :
             tmp_ctr =  ctry.text
             tmp_state = ""
-            country={}
+            country = {}
             country['country'] = tmp_ctr
             country['components'] = []
             countries['countries'].append(country)
