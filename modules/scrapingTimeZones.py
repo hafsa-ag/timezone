@@ -29,7 +29,7 @@ def scrapTimeZone() :
 
 #getting page data
     page = requests.get(link_of_page,headers=random_headers())
-    soup = bs(page.text,'html.parser',from_encoding="iso-8859-1")
+    soup = bs(page.content,'html.parser',from_encoding="iso-8859-1")
 
     table_all = soup.find('table', class_='dataTab1 genericBlock')
     trs = table_all.find_all('tr')
@@ -48,7 +48,8 @@ def scrapTimeZone() :
             country={}
             country['country'] = tmp_ctr
             country['components'] = []
-            countries['countries'].append(country)
+            countries['countries'].append(cou
+                ntry)
         elif state : 
             tmp_state = state.text
             tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries['countries']))[0]
