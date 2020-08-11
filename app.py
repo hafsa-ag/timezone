@@ -16,7 +16,7 @@ app.logger.setLevel(logging.ERROR)
 
 @app.route('/')
 def hello_world():
-    return "GET CACAO !"
+    return "GET Timezones!"
 
 
 @app.route('/json', methods=["GET"])
