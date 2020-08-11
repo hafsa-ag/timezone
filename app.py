@@ -2,7 +2,7 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from modules.scrapingCacaoData import scrapCacaoToJson
+from modules.scrapingTimeZones import scrapTimeZone
 import sys
 import logging
 
@@ -25,7 +25,7 @@ def getCacao():
     Post method takes xls from request
     returns json of data with quantiles and risk calculated
     """
-    return jsonify(scrapCacaoToJson())
+    return jsonify(scrapTimeZone())
 
 
 if __name__ == "__main__":

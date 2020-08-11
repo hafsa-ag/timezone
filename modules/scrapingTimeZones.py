@@ -16,7 +16,7 @@ desktop_agents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML
                  'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
                  'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 
-link_of_page = "https://www.boursorama.com/bourse/matieres-premieres/cours/_CJ/"
+link_of_page = "https://24timezones.com/temps_du_monde2.php"
 
 
 def random_headers():
@@ -24,43 +24,63 @@ def random_headers():
  
 
 
-def scrapCacaoToJson() :
+def scrapTimeZone() :
 
 
 #getting page data
     page = requests.get(link_of_page,headers=random_headers())
-    soup = bs(page.content,'html.parser',from_encoding="iso-8859-1")
+    soup = bs(page.text,'html.parser',from_encoding="iso-8859-1")
 
+    table_all = soup.find('table', class_='dataTab1 genericBlock')
+    trs = table_all.find_all('tr')
 
-#prepare the dict, where current is the data of today and historic_5days is for the previous 5 days
-    data_cacao = {'current':{}}
+countries = []
+tmp_ctr = ""
+tmp_state = ""
 
+for t in range(len(trs)):
 
-#current contains the last value, the incative value and the variation percent
-    data_cacao['current']['last_value'] = soup.find('span',{"class":"c-instrument c-instrument--last"}).text.strip()
-    data_cacao['current']['indicative_value'] = soup.find('span',{"class":"c-faceplate__indicative-value"}).text.strip()
-    data_cacao['current']['variation'] = soup.find('span',{"c-instrument c-instrument--variation"}).text.strip()
+    tds = trs[t].find_all('td')
+    ctry =  tds[0].find('a',class_='country_link')
+    state =  tds[0].find('a',class_='state_link')
 
-    """prepare to fill the historic_5days with the data in the table containing 5 consecutive days     
-    of the value (Der.),the variation percent (Var.), the indicative value (Ouv.)"""
+    if ctry :
+        tmp_ctr =  ctry.text
+        tmp_state = ""
+        country={}
+        country['country'] = tmp_ctr
+        country['components'] = []
+        countries.append(country)
 
-    table_5days = soup.find('table', class_='c-table c-table--generic')
-    headers = table_5days.find_all('th')
-    body = table_5days.find_all('td')
-    
-    
-    for i in range(0,len(body),len(headers)):
-        opt = ''.join(e for e in body[i].text if e.isalnum())
-        data_cacao[opt] = []
-        for j in range(1,len(headers)):
-            min_dict = {}
-            date = headers[j].get_text().strip()
-            data = body[i+j].get_text().strip()
-            min_dict['date'] = date
-            min_dict['value'] = data
-            data_cacao[opt].append(min_dict)
+    elif state : 
+        tmp_state = state.text
+        print(countries)
+        tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+        tmp['components'].append({'state':tmp_state,'components':[]})
+
+    else :
+
+        if tds[0].text=='-':
+            tmp_state = ""
+
+        else :
+
+            for a in tds[0].find_all('a'):
+                city = {}
+                city['city'] =  a.text
+                city['time'] = tds[1].find('span',class_='time_format_24').text
+
+                if tmp_state == "":
+                    tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+                    tmp['components'].append(city)
+                    
+                else :
+                    tmp = list(filter(lambda country: country['country'] == tmp_ctr,countries))[0]
+                    tmp = list(filter(lambda state: state['state']==tmp_state,tmp['components']))[0]
+                    tmp['components'].append(city)
+
 
 #return the json of the dict
-    return data_cacao
+    return {"countries":countries}
 
 
