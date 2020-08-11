@@ -29,7 +29,7 @@ def scrapTimeZone() :
 
 #getting page data
     page = requests.get(link_of_page,headers=random_headers())
-    soup = bs(page.content,'html.parser',from_encoding="iso-8859-1")
+    soup = bs(page.text,'html.parser',from_encoding="iso-8859-1")
 
     table_all = soup.find('table', class_='dataTab1 genericBlock')
     trs = table_all.find_all('tr')
